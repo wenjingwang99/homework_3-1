@@ -82,11 +82,30 @@ app.layout = html.Div([
     ############################################################################
     html.H4("Input durationStr:"),
     html.Div(
-        dcc.Input(
-            id='duration-str', value='30 D'
-        ),
-        style={'width': '365px'}
+        children=[
+            html.Div(
+                children=[
+                    html.Label('durationStr:'),
+                    dcc.Input(id='duration-str-number', type='text', value='30')
+                ],
+                style={
+                    'display': 'inline-block',
+                    'margin-right': '5px',
+                }
+            ),
+            html.Div(
+                children=[
+                    dcc.Dropdown(
+                        ["S", "D", "W", "M", "Y"],
+                        "D",
+                        id='duration-str-time'
+                    ),
+                ],
+                style={'display': 'inline-block'}
+            )
+        ]
     ),
+
     html.H4("Select value for barSizeSetting:"),
     html.Div(
         dcc.Dropdown(
@@ -178,12 +197,13 @@ app.layout = html.Div([
     [State('currency-input', 'value'), State('what-to-show', 'value'),
      State('edt-date', 'date'), State('edt-hour', 'value'),
      State('edt-minute', 'value'), State('edt-second', 'value'),
-     State('duration-str', 'value'),
+     State('duration-str-number', 'value'), State('duration-str-time', 'value'),
      State('bar-size-setting', 'value'), State('use-RTH', 'value')]
 )
 def update_candlestick_graph(n_clicks, currency_string, what_to_show,
                              edt_date, edt_hour, edt_minute, edt_second,
-                             duration_str, bar_size_setting, use_RTH):
+                             duration_str_number, duration_str_time,
+                             bar_size_setting, use_RTH):
     # n_clicks doesn't
     # get used, we only include it for the dependency.
 
@@ -191,6 +211,11 @@ def update_candlestick_graph(n_clicks, currency_string, what_to_show,
         endDateTime = ''
     else:
         print(edt_date, edt_hour, edt_minute, edt_second)
+        # edt_date = edt_date.split('-')
+        # end_date_time = edt_date[0] + edt_date[1] + edt_date[2] + " " + str(edt_hour) + ":" + str(edt_minute) + ":" + str(edt_second) + "EST"
+
+    duration_str = duration_str_number + ' ' + duration_str_time
+
 
     # First things first -- what currency pair history do you want to fetch?
     # Define it as a contract object!
