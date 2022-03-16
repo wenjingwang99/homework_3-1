@@ -158,7 +158,13 @@ app.layout = html.Div([
     # Div to hold the initial instructions and the updated info once submit is pressed
     html.Div(id='currency-output', children='Enter a currency code and press submit'),
     # Div to hold the candlestick graph
-    html.Div([dcc.Graph(id='candlestick-graph')]),
+    html.Div(
+        dcc.Loading(
+            id="loading-1",
+            type="default",
+            children=dcc.Graph(id='candlestick-graph')
+        )
+    ),
     # Another line break
     html.Br(),
     # Section title
@@ -209,11 +215,13 @@ def update_candlestick_graph(n_clicks, currency_string, what_to_show,
     # get used, we only include it for the dependency.
 
     if any([i is None for i in [edt_date, edt_hour, edt_minute, edt_second]]):
-        endDateTime = ''
+        end_Date_Time = ''
     else:
-        print(edt_date, edt_hour, edt_minute, edt_second)
-        # edt_date = edt_date.split('-')
-        # end_date_time = edt_date[0] + edt_date[1] + edt_date[2] + " " + str(edt_hour) + ":" + str(edt_minute) + ":" + str(edt_second) + "EST"
+        # print(edt_date, edt_hour, edt_minute, edt_second)
+        edt_date = edt_date.split('-')
+        end_Date_Time = edt_date[0] + edt_date[1] + edt_date[2] + " " \
+                      + str(edt_hour) + ":" + str(edt_minute) + ":" \
+                      + str(edt_second) + " EST"
 
     duration_str = duration_str_number + ' ' + duration_str_time
 
@@ -240,7 +248,7 @@ def update_candlestick_graph(n_clicks, currency_string, what_to_show,
     #   function to include your new vars!
     cph = fetch_historical_data(
         contract=contract,
-        endDateTime='',
+        endDateTime=end_Date_Time,
         durationStr=duration_str,       # <-- make a reactive input
         barSizeSetting=bar_size_setting,  # <-- make a reactive input
         whatToShow=what_to_show,
