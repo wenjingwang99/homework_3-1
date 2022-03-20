@@ -7,7 +7,10 @@ from ibapi.contract import Contract
 from fintech_ibkr import *
 import pandas as pd
 
+
 # Make a Dash app!
+
+
 app = dash.Dash(__name__)
 server = app.server
 
@@ -225,7 +228,6 @@ def update_candlestick_graph(n_clicks, currency_string, what_to_show,
 
     duration_str = duration_str_number + ' ' + duration_str_time
 
-
     # First things first -- what currency pair history do you want to fetch?
     # Define it as a contract object!
     contract = Contract()
@@ -233,6 +235,14 @@ def update_candlestick_graph(n_clicks, currency_string, what_to_show,
     contract.secType  = 'CASH'
     contract.exchange = 'IDEALPRO' # 'IDEALPRO' is the currency exchange.
     contract.currency = currency_string.split(".")[1]
+
+    contract_detail = fetch_contract_details(contract)
+    if type(contract_detail) == str:
+        return ("Error: wrong currency pairs (" + currency_string + "), please check your input"), go.Figure()
+    else:
+        s = str(contract_detail).split(",")[10]
+        if s != currency_string:
+            return ("The system currency pairs " + s +" does not match your input " + currency_string), go.Figure()
 
     ############################################################################
     ############################################################################
