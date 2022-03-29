@@ -12,10 +12,10 @@ import dash_bootstrap_components as dbc
 
 # Make a Dash app!
 
-
+df = pd.read_csv('submitted_orders.csv')
 app = dash.Dash(__name__)
 server = app.server
-df = pd.read_csv('submitted_orders.csv')
+
 # Define the layout.
 app.layout = html.Div([
 
@@ -467,31 +467,52 @@ def trade(n_clicks, action, trade_currency, trade_amt, order_type,
     info = place_order(contract, order)
 
     file_path = 'submitted_orders.csv'
-    time = fetch_current_time()
+    # time = fetch_current_time()
+    # order_id = info['order_id'][0]
+    # client_id = info['client_id'][0]
+    # perm_id = info['perm_id'][0]
+    # con_id = contract.conId
+    # timestamp = info['timestamp'][0]
+    #
+    # orders = pd.read_csv("submitted_orders.csv")
+    # orders = pd.concat(
+    #     [orders, pd.DataFrame({
+    #         'timestamp': [time],
+    #         'order_id': [order_id],
+    #         'client_id': [client_id],
+    #         'perm_id': [perm_id],
+    #         'con_id': [con_id],
+    #         'symbol': [symbol],
+    #         'action': [action],
+    #         'size': [trade_amt],
+    #         'order_type': [order_type],
+    #         'lmt_price': [limit_price]
+    #     })])
+    # orders.to_csv("submitted_orders.csv")
+    # # Return the message, which goes to the trade-output div's "children" attribute.
+    # return msg, df.to_dict('records')
     order_id = info['order_id'][0]
     client_id = info['client_id'][0]
     perm_id = info['perm_id'][0]
     con_id = contract.conId
-    timestamp = info['timestamp'][0]
-
-    orders = pd.read_csv("submitted_orders.csv")
-    orders = pd.concat(
-        [orders, pd.DataFrame({
-            'timestamp': [time],
-            'order_id': [order_id],
-            'client_id': [client_id],
-            'perm_id': [perm_id],
-            'con_id': [con_id],
-            'symbol': [symbol],
-            'action': [action],
-            'size': [trade_amt],
-            'order_type': [order_type],
-            'lmt_price': [limit_price]
-        })])
-    orders.to_csv( "submitted_orders.csv")
-    # Return the message, which goes to the trade-output div's "children" attribute.
+    timestamp = fetch_current_time()
+    new_data = {'timestamp': [timestamp],
+                'order_id': [order_id],
+                'client_id': [client_id],
+                'perm_id': [perm_id],
+                'con_id': [con_id],
+                'symbol': [symbol],
+                'action': [action],
+                'size': [trade_amt],
+                'order_type': [order_type],
+                'lmt_price': [limit_price]}
+    new_line = pd.DataFrame(new_data)
+    new_line.to_csv(file_path, mode='a', header=False, index=False)
+    df = pd.read_csv(file_path)
+    # df.columns = ['timestamp', 'order_id', 'client_id', 'perm_id', 'con_id', 'symbol', 'action','size', 'order_type', 'lmt_price']
+    print(11111111111111111111111111111111)
+    # print(new_line)
     return msg, df.to_dict('records')
-
 
 # Run it!
 if __name__ == '__main__':

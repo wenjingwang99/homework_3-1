@@ -1,1 +1,4 @@
-﻿timestamp,order_id,client_id,perm_id,con_id,symbol,action,size,order_type,lmt_price
+timestamp,order_id,client_id,perm_id,con_id,symbol,action,size,order_type,lmt_price
+2022-03-29 19:11:25,10.0,12345.0,524058062.0,0,EUR,BUY,20000,MARKET,
+2022-03-29 19:14:19,12.0,12345.0,524058064.0,0,EUR,SELL,20000,MARKET,
+2022-03-29 19:14:45,13.0,12345.0,524058065.0,0,EUR,SELL,20000,MARKET,
